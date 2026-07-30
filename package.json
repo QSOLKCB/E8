@@ -1,0 +1,13 @@
+{
+  "name": "@qsol-imc/e8-geometry-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Offline E8 root-space visualization and ETQ sonification laboratory",
+  "scripts": {
+    "test": "node tests/smoke.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MPL-2.0"
+}

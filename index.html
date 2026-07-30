@@ -1,0 +1,364 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: MPL-2.0 -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta
+    name="description"
+    content="A deterministic offline E8 root-system visual and sonification laboratory with Coxeter projection, D4 triality, ETQ-101 mapping, playback, and WAV rendering."
+  >
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self' data: blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src blob:;"
+  >
+  <title>E8 Root-Space Laboratory · Visual + Auditory</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="brand-mark" aria-hidden="true">
+      <span>E8</span>
+      <b>240</b>
+    </div>
+    <div class="brand-copy">
+      <p class="eyebrow">EXCEPTIONAL ROOT-SPACE INSTRUMENT</p>
+      <h1>E8 Geometry Laboratory</h1>
+      <p>Exact roots · Coxeter plane · D4 triality · ETQ-101 auditory receiver</p>
+    </div>
+    <nav class="header-status" aria-label="Project status">
+      <a href="https://github.com/QSOLKCB/E8">source</a>
+      <span class="status-chip"><i aria-hidden="true"></i>offline · no upload</span>
+      <span class="concept-chip">ETQ-101 v2</span>
+      <span class="concept-chip">MPL-2.0</span>
+    </nav>
+  </header>
+
+  <main class="app-shell">
+    <aside class="control-rack" aria-label="E8 laboratory controls">
+      <section class="rack-section">
+        <div class="section-label"><span>01</span>Root receiver</div>
+        <label for="rootSelection">
+          Visible root set
+          <select id="rootSelection">
+            <option value="all">Complete E8 · 240</option>
+            <option value="etq101">ETQ-101 selector · 101</option>
+            <option value="integer">Integer family · 112</option>
+            <option value="half-integer">Half-integer family · 128</option>
+            <option value="fixed">Triality-fixed · 12</option>
+            <option value="orbit">One triality orbit · 3</option>
+          </select>
+        </label>
+        <label id="orbitControl" for="orbitIndex" hidden>
+          Triality orbit
+          <output id="orbitIndexValue" for="orbitIndex">0 / 75</output>
+          <input id="orbitIndex" type="range" min="0" max="75" value="0" step="1">
+        </label>
+        <label for="projection">
+          Projection
+          <select id="projection">
+            <option value="coxeter-depth">Coxeter plane + exponent-7 depth</option>
+            <option value="coxeter-plane">Exact Coxeter plane · 2D</option>
+            <option value="d4-blocks">D4 × D4 block receiver</option>
+          </select>
+        </label>
+        <label for="palette">
+          Structural colour
+          <select id="palette">
+            <option value="triality">Triality q = 0 / 1 / 2</option>
+            <option value="rings">Eight Coxeter rings</option>
+            <option value="family">112 integer / 128 half-integer</option>
+            <option value="degree">Selected-graph degree</option>
+            <option value="mono">Monochrome structure</option>
+          </select>
+        </label>
+        <div class="check-grid">
+          <label class="check-row">
+            <input id="showEdges" type="checkbox" checked>
+            <span>Draw root-graph edges</span>
+          </label>
+          <label class="check-row">
+            <input id="showSelectedHalo" type="checkbox" checked>
+            <span>Mark ETQ-101 selected roots</span>
+          </label>
+          <label class="check-row">
+            <input id="showAxes" type="checkbox" checked>
+            <span>Show projection axes and rings</span>
+          </label>
+        </div>
+        <label for="edgeOpacity">
+          Edge visibility
+          <output id="edgeOpacityValue" for="edgeOpacity">15%</output>
+          <input id="edgeOpacity" type="range" min="0" max="60" value="15" step="1">
+        </label>
+        <label for="nodeSize">
+          Root size
+          <output id="nodeSizeValue" for="nodeSize">1.00×</output>
+          <input id="nodeSize" type="range" min="45" max="220" value="100" step="1">
+        </label>
+      </section>
+
+      <section class="rack-section">
+        <div class="section-label"><span>02</span>Eight-dimensional view</div>
+        <div class="transport-row">
+          <button id="rotationToggle" class="primary" type="button" aria-pressed="true">
+            Pause rotation
+          </button>
+          <button id="resetView" type="button">Reset view</button>
+        </div>
+        <label for="rotationSpeed">
+          Rotation speed
+          <output id="rotationSpeedValue" for="rotationSpeed">0.24×</output>
+          <input id="rotationSpeed" type="range" min="-100" max="100" value="24" step="1">
+        </label>
+        <label for="depth">
+          Exponent-7 depth
+          <output id="depthValue" for="depth">72%</output>
+          <input id="depth" type="range" min="0" max="140" value="72" step="1">
+        </label>
+        <label for="depthPhase">
+          Depth-plane phase
+          <output id="depthPhaseValue" for="depthPhase">0°</output>
+          <input id="depthPhase" type="range" min="0" max="359" value="0" step="1">
+        </label>
+        <label for="trialityPhase">
+          Triality phase
+          <output id="trialityPhaseValue" for="trialityPhase">q → q</output>
+          <input id="trialityPhase" type="range" min="0" max="2" value="0" step="1">
+        </label>
+        <p class="control-note">
+          Drag the canvas to rotate. Scroll to zoom. Double-click to reset.
+          Coxeter-plane mode preserves the exact two-dimensional projection;
+          added depth is a declared display receiver.
+        </p>
+      </section>
+
+      <section class="rack-section audio-section">
+        <div class="section-label"><span>03</span>ETQ auditory receiver</div>
+        <label for="traversal">
+          Event traversal
+          <select id="traversal">
+            <option value="basis-order">ETQ-101 basis order · 101</option>
+            <option value="triality-orbits">Triality orbit groups · 101</option>
+            <option value="coxeter-rings">Coxeter ring / angle · 101</option>
+            <option value="graph-breadth-first">Selected graph breadth-first · 101</option>
+            <option value="etq303-support">ETQ-303 support traversal · 303</option>
+          </select>
+        </label>
+        <label for="tempo">
+          Receiver tempo
+          <output id="tempoValue" for="tempo">120 BPM</output>
+          <input id="tempo" type="range" min="40" max="220" value="120" step="1">
+        </label>
+        <label for="stepsPerBeat">
+          Event subdivision
+          <select id="stepsPerBeat">
+            <option value="1">Quarter · 1 / beat</option>
+            <option value="2">Eighth · 2 / beat</option>
+            <option value="3">Triplet · 3 / beat</option>
+            <option value="4" selected>Sixteenth · 4 / beat</option>
+            <option value="8">Thirty-second · 8 / beat</option>
+          </select>
+        </label>
+        <label for="a4Hz">
+          External receiver A4
+          <output id="a4HzValue" for="a4Hz">432.0 Hz</output>
+          <input id="a4Hz" type="range" min="4000" max="4800" value="4320" step="1">
+        </label>
+        <div class="tuning-shortcuts" aria-label="Receiver tuning presets">
+          <button type="button" data-a4="432">A4 432</button>
+          <button type="button" data-a4="440">A4 440</button>
+        </div>
+        <label class="check-row geometry-timbre-row">
+          <input id="geometryTimbre" type="checkbox" checked>
+          <span>Map family, degree and ring to timbre</span>
+        </label>
+        <div class="transport-grid">
+          <button id="playAudio" class="primary" type="button">Play sequence</button>
+          <button id="stopAudio" type="button" disabled>Stop</button>
+          <button id="auditionRoot" type="button">Audition selected</button>
+          <button id="stepTriality" type="button">Step q → q + 1</button>
+        </div>
+        <div class="audio-progress" aria-hidden="true">
+          <i id="audioProgressBar"></i>
+        </div>
+        <p id="audioStatus" class="control-note" role="status">
+          Canonical: symbolic MIDI notes 13–113. Acoustic tuning and sound are
+          external receiver choices.
+        </p>
+      </section>
+
+      <section class="rack-section">
+        <div class="section-label"><span>04</span>Local capture</div>
+        <div class="export-grid">
+          <button id="renderWav" type="button">Render .WAV</button>
+          <button id="snapshot" type="button">Snapshot .PNG</button>
+          <button id="exportManifest" type="button">Receiver .JSON</button>
+          <button id="exportState" type="button">Settings .JSON</button>
+          <label class="file-button" for="importState">
+            Load settings
+            <input id="importState" type="file" accept="application/json,.json">
+          </label>
+        </div>
+        <p id="renderStatus" class="control-note" role="status">
+          WAV rendering is deterministic 48 kHz stereo PCM and remains entirely
+          inside this browser.
+        </p>
+      </section>
+    </aside>
+
+    <section class="workspace">
+      <section class="model-heading" aria-labelledby="fieldTitle">
+        <div>
+          <p class="eyebrow">ACTIVE PROJECTION RECEIVER</p>
+          <h2 id="fieldTitle">Complete E8 · 240 roots</h2>
+        </div>
+        <p id="fieldSummary">
+          Eight exact Coxeter rings, each containing 30 roots, with the
+          exponent-7 invariant plane supplying optional display depth.
+        </p>
+      </section>
+
+      <section class="visual-panel">
+        <header class="panel-head">
+          <div>
+            <p id="projectionEyebrow" class="eyebrow">COXETER + DEPTH</p>
+            <h2>E8 root polytope receiver</h2>
+          </div>
+          <div class="panel-badges">
+            <span id="visibleBadge">240 roots</span>
+            <span id="edgeBadge">6,720 edges</span>
+            <span id="audioBadge">audio idle</span>
+          </div>
+        </header>
+
+        <div id="canvasStage" class="canvas-stage">
+          <canvas
+            id="e8Canvas"
+            role="img"
+            aria-label="Interactive projection of the 240 roots of E8, with structural edges, triality colouring, and animated ETQ event highlighting."
+          ></canvas>
+          <div class="canvas-hint">
+            drag rotate · wheel zoom · click inspect · double-click reset
+          </div>
+          <div id="hoverLabel" class="hover-label" hidden></div>
+        </div>
+
+        <div class="visual-legend" aria-label="Structural colour legend">
+          <span><i class="legend-q0"></i>q = 0</span>
+          <span><i class="legend-q1"></i>q = 1</span>
+          <span><i class="legend-q2"></i>q = 2</span>
+          <span><i class="legend-fixed"></i>triality fixed</span>
+          <span class="legend-note">Colours change with the structural palette.</span>
+        </div>
+      </section>
+
+      <section class="inspector-panel" aria-labelledby="inspectorTitle">
+        <div class="inspector-mark" id="inspectorMark" aria-hidden="true">∈</div>
+        <div class="inspector-copy">
+          <p class="eyebrow">ROOT INSPECTOR</p>
+          <h2 id="inspectorTitle">Select a root</h2>
+          <p id="inspectorCoordinates" class="coordinate-line">
+            Doubled coordinates will appear here.
+          </p>
+          <div id="inspectorTags" class="profile-tags"></div>
+        </div>
+        <div class="inspector-audio">
+          <span>ETQ symbolic note</span>
+          <strong id="inspectorMidi">—</strong>
+          <small id="inspectorFrequency">Receiver frequency: —</small>
+        </div>
+      </section>
+
+      <section class="sequence-panel" aria-label="Auditory event sequence">
+        <header class="panel-head compact">
+          <div>
+            <p class="eyebrow">EVENT RECEIPT</p>
+            <h2 id="sequenceTitle">ETQ-101 basis traversal</h2>
+          </div>
+          <p id="sequenceSummary">101 events · 33 low / 33 mid / 33 high + 2 singlets</p>
+        </header>
+        <canvas
+          id="sequenceCanvas"
+          role="img"
+          aria-label="Overview of the scheduled ETQ symbolic note sequence across low, mid, and high register lanes."
+        ></canvas>
+      </section>
+
+      <section class="readout-panel" aria-label="Exact structure readout">
+        <div>
+          <span>E8 roots</span>
+          <strong>240</strong>
+          <small>112 integer + 128 half-integer</small>
+        </div>
+        <div>
+          <span>Root graph</span>
+          <strong>6,720</strong>
+          <small>56 neighbours per root</small>
+        </div>
+        <div>
+          <span>D4 triality</span>
+          <strong>12 + 76×3</strong>
+          <small>fixed roots + three-cycles</small>
+        </div>
+        <div>
+          <span>ETQ selector</span>
+          <strong>2 + 33×3</strong>
+          <small>101 root-indexed states</small>
+        </div>
+      </section>
+
+      <section class="mapping-panel" aria-labelledby="mappingTitle">
+        <div class="mapping-mark" aria-hidden="true">M</div>
+        <div>
+          <p class="eyebrow">SONIFICATION PROFILE</p>
+          <h2 id="mappingTitle">Canonical identity first, receiver sound second.</h2>
+          <p>
+            ETQ-101 supplies the reversible symbolic code:
+            <code>M(m,q) = 14 + 33q + m</code>, with fixed singlets at MIDI
+            notes 13 and 113. This lab then declares a separate
+            <code>e8-geometry-auditory-display-v1</code> receiver: root family
+            shapes partials, selected-graph degree shapes brightness, Coxeter
+            ring shapes spectral colour, qutrit label shapes pan, and the SCL
+            value shapes phase modulation. Tempo, A4, gain, timbre, PCM, and
+            WAV are recorded receiver settings—not E8-derived constants.
+          </p>
+          <div class="mapping-grid">
+            <span><b>q = 0</b> MIDI 14–46 · low lane · SCL +1</span>
+            <span><b>q = 1</b> MIDI 47–79 · mid lane · SCL −2</span>
+            <span><b>q = 2</b> MIDI 80–112 · high lane · SCL +1</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="boundary-panel">
+        <div class="boundary-mark" aria-hidden="true">≈</div>
+        <div>
+          <p class="eyebrow">INTERPRETATION BOUNDARY</p>
+          <h2>Exact E8 mathematics; authored projection and auditory display.</h2>
+          <p>
+            The 240 roots, inner products, 6,720 graph edges, Coxeter element,
+            8×30 ring structure, embedded order-three D4 triality, and ETQ-101
+            selector are reproducible mathematical constructions. The
+            exponent-7 depth axis, screen perspective, traversal order,
+            low/mid/high display polarity, receiver tuning, waveform, loudness,
+            timbre and WAV realization are declared design choices. They do not
+            establish a preferred physical frequency, a 101-dimensional E8
+            representation, or an acoustic law of E8.
+          </p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <span>Trent Slade / QSOL-IMC · E8 Geometry Laboratory · 2026</span>
+    <span>Exact integer root construction · deterministic receiver · offline-first</span>
+  </footer>
+
+  <script src="e8-core.js"></script>
+  <script src="audio-core.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

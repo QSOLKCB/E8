@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this laboratory, please cite it and preserve the repository attribution."
+title: "E8 Geometry Laboratory: Visual and ETQ Auditory Receiver"
+type: software
+authors:
+  - family-names: "Slade"
+    given-names: "Trent"
+    affiliation: "QSOL-IMC"
+repository-code: "https://github.com/QSOLKCB/E8"
+url: "https://qsolkcb.github.io/E8/"
+version: 1.0.0
+date-released: 2026-07-30
+license: MPL-2.0
+keywords:
+  - E8 root system
+  - Coxeter plane
+  - D4 triality
+  - ETQ-101
+  - sonification
+  - data visualization
